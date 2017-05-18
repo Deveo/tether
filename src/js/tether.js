@@ -493,6 +493,18 @@ class TetherClass extends Evented {
 
     this.updateAttachClasses(this.attachment, targetAttachment);
 
+    const targetPos = this.cache('target-bounds', () => {
+      return this.getTargetBounds();
+    });
+    const targetSize = targetPos;
+    
+    // https://github.com/HubSpot/tether/pull/203
+    if (this.options.copyTargetWidth)
+      this.element.style.width = `${ targetSize.width }px`;
+
+    if (this.options.copyTargetHeight)
+      this.element.style.height = `${ targetSize.height }px`;
+
     const elementPos = this.cache('element-bounds', () => {
       return getBounds(this.element);
     });
@@ -506,11 +518,6 @@ class TetherClass extends Evented {
     } else {
       this.lastSize = {width, height};
     }
-
-    const targetPos = this.cache('target-bounds', () => {
-      return this.getTargetBounds();
-    });
-    const targetSize = targetPos;
 
     // Get an actual px offset from the attachment
     let offset = offsetToPx(attachmentToOffset(this.attachment), {width, height});
